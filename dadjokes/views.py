@@ -3,7 +3,10 @@ from .models import DadJoke
 from .serializers import DadJokeSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import generics
 from rest_framework import status
+from rest_framework import filters
+
 
 @api_view(['GET', 'POST'])
 def dadjoke_list(request, format=None):
@@ -39,3 +42,9 @@ def dadjoke_detail(request, id, format=None):
         dadjoke.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
         
+
+class DadJokesAPIView(generics.ListCreateAPIView):
+    search_fields = ['category']
+    filter_backends = (filters.SearchFilter,)
+    queryset = DadJoke.objects.all()
+    serializer_class = DadJokeSerializer
